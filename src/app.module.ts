@@ -9,9 +9,8 @@ import { DomainModule } from './domain/domain.module';
 import { NameModule } from './name/name.module';
 import { NetworkModule } from './network/network.module';
 import { DniModule } from './dni/dni.module';
-import { AbuseipController } from './abuseip/abuseip.controller';
-import { AbuseipService } from './abuseip/abuseip.service';
 import { AbuseipModule } from './abuseip/abuseip.module';
+import { UrlscanModule } from './urlscan/urlscan.module';
 import * as redisStore from 'cache-manager-redis-store';
 
 @Module({
@@ -41,6 +40,7 @@ import * as redisStore from 'cache-manager-redis-store';
     NetworkModule,
     DniModule,
     AbuseipModule,
+    UrlscanModule,
   ],
   controllers: [],
   providers: [],
