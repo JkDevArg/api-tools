@@ -12,6 +12,8 @@ import { DniModule } from './dni/dni.module';
 import { AbuseipModule } from './abuseip/abuseip.module';
 import { UrlscanModule } from './urlscan/urlscan.module';
 import * as redisStore from 'cache-manager-redis-store';
+import { MailModule } from './mail/mail.module';
+
 
 @Module({
   imports: [
@@ -41,6 +43,7 @@ import * as redisStore from 'cache-manager-redis-store';
     DniModule,
     AbuseipModule,
     UrlscanModule,
+    MailModule,
   ],
   controllers: [],
   providers: [],
