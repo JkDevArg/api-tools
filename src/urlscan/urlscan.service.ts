@@ -30,9 +30,9 @@ export class UrlscanService {
             return cacheUrlScanExists;
         }
 
-        const nameExists = await this.validateUrlExists(getUrlScan.url);
+        const urlScanExists = await this.validateUrlExists(getUrlScan.url);
 
-        if (nameExists.length === 0) {
+        if (urlScanExists.length === 0) {
             await this.saveUrlScanRepository.save({
                 ...getUrlScan,
                 userEmail: user.email,
@@ -42,7 +42,7 @@ export class UrlscanService {
             await this.cacheManager.set('data_scan_url', { url: getUrlScan.url, data: resp });
         }
 
-        return nameExists.length > 0 ? nameExists : resp;
+        return urlScanExists.length > 0 ? urlScanExists : resp;
     }
 
     async findAll(user: UserActiveInterface) {
