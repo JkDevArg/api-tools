@@ -10,7 +10,16 @@ export class sendEmailDto {
     subject: string;
 
     @IsString()
-    body: string;
+    @IsOptional()
+    body?: string;
+    
+    @IsString()
+    @IsOptional()
+    from?: string;
+
+    @IsString()
+    @IsOptional()
+    logo?: string;
 
     @IsString()
     @IsEmail()

