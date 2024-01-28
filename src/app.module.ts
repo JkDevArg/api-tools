@@ -13,6 +13,7 @@ import { AbuseipModule } from './abuseip/abuseip.module';
 import { UrlscanModule } from './urlscan/urlscan.module';
 import * as redisStore from 'cache-manager-redis-store';
 import { MailModule } from './mail/mail.module';
+import { WebsocketModule } from './websocket/websocket.module';
 
 
 @Module({
@@ -44,6 +45,7 @@ import { MailModule } from './mail/mail.module';
     AbuseipModule,
     UrlscanModule,
     MailModule,
+    WebsocketModule,
   ],
   controllers: [],
   providers: [],
