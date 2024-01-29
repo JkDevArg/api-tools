@@ -12,7 +12,7 @@ export class sendEmailDto {
     @IsString()
     @IsOptional()
     body?: string;
-    
+
     @IsString()
     @IsOptional()
     from?: string;
