@@ -14,6 +14,9 @@ import { UrlscanModule } from './urlscan/urlscan.module';
 import * as redisStore from 'cache-manager-redis-store';
 import { MailModule } from './mail/mail.module';
 import { WebsocketModule } from './websocket/websocket.module';
+import { RegisterModule } from './venue/register/register.module';
+import { PersonController } from './person/person.controller';
+import { PersonModule } from './person/person.module';
 
 
 @Module({
@@ -46,6 +49,8 @@ import { WebsocketModule } from './websocket/websocket.module';
     UrlscanModule,
     MailModule,
     WebsocketModule,
+    RegisterModule,
+    PersonModule,
   ],
   controllers: [],
   providers: [],
