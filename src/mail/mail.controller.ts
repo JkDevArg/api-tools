@@ -6,7 +6,7 @@ import { ActiveUser } from 'src/common/decorators/active-user.decorator';
 import { UserActiveInterface } from 'src/common/interfaces/user-active.interface';
 import { getDataVictim, sendEmailDto } from './dto/mail.dto';
 
-@Auth(Role.ADMIN)
+@Auth(Role.USER)
 @Controller('mail')
 export class MailController {
     constructor(private readonly sendEmailService: MailService) {}
