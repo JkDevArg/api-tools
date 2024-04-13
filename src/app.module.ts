@@ -17,6 +17,7 @@ import { WebsocketModule } from './websocket/websocket.module';
 import { RegisterModule } from './venue/register/register.module';
 import { PersonController } from './person/person.controller';
 import { PersonModule } from './person/person.module';
+import { ChatgptModule } from './chatgpt/chatgpt.module';
 
 
 @Module({
@@ -51,6 +52,7 @@ import { PersonModule } from './person/person.module';
     WebsocketModule,
     RegisterModule,
     PersonModule,
+    ChatgptModule,
   ],
   controllers: [],
   providers: [],

@@ -4,7 +4,7 @@ import axios, { AxiosInstance } from 'axios';
 import { axiosErrorHandler } from 'src/common/utils/http-resp.utils';
 import { Repository } from 'typeorm';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { Cache } from 'cache-manager';  
+import { Cache } from 'cache-manager';
 import { RegisterVenue } from './entities/register.entity';
 import { RegisterVenueDto } from './dto/register.dto';
 import { UserAgent } from 'src/common/enums/useragent.enum';
